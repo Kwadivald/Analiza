@@ -20,12 +20,12 @@ This repository is intended to help you:
 3. Add source files, scripts, or documentation as needed.
 
 ## Suggested Structure
-- `dokumentacja/` for written notes and references
-- `skrypty/` for source code
-- `skrypty_roznorakie/` for scripts which are not crucial and are made for fun
-- `tabele/` for datasets or sample inputs
-- `testy/` for automated checks
-- `licencje/` for license files
+- `documentation/` for written notes and references
+- `scripts/` for source code
+- `scripts_different/` for scripts which are not crucial and are made for fun
+- `data/` for datasets or sample inputs
+- `tests/` for automated checks
+- `licenses/` for license files
 
 ## Contributing
 If you plan to collaborate on this project, document your workflow, naming conventions, and any setup steps needed for others.
