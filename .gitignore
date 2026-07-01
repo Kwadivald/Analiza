@@ -1,0 +1,7 @@
+# Basic directories to ignore
+.venv/
+.vscode/
+
+# Basic files to ignore
+scripts_different/cw1.ipynb
+scripts_different/AIEvenorODD.py

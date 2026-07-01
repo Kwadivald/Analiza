@@ -7,21 +7,23 @@ This is a simple markdown-style documentation file. It gives a short overview of
 - This document describes the basic structure and purpose of the files in the project.
 - It is not a full reference guide, but a demo version of documentation for quick understanding.
 
-## Files and Purpose
+### Files and Purpose 
 
-### Data
+  - .gitignore - a file which states, which files and directories shouldn't be pushed (or sent away) to git servers.
 
-    * smog_raw.csv - a basic data file, which is made as a foundation for working and preprocessing data on. The smog_raw.ipynb script does the processing of it.
+## Data
 
-    * smog1.csv, smog2.csv, smog3.csv - files made for seeing the shape in which the data is made and think about the way in which preprocess the data
+  * smog_raw.csv - a basic data file, which is made as a foundation for working and preprocessing data on. The smog_raw.ipynb script does the processing of it.
 
-### Scripts
+  * smog1.csv, smog2.csv, smog3.csv - files made for seeing the shape in which the data is made and think about the way in which preprocess the data
 
-    1.  csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure).
+## Scripts
 
-    2.  smog_raw - jupyter script which manages first, basic data wrangling on smog_raw.csv data file. Adds an area column to the data frame and fills it with two first numbers from postal code. Saves changed file in "tests" directory, with added timestamp.
+  1. csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure).
 
-### Scripts_different
+  2. smog_raw - jupyter script which manages first, basic data wrangling on smog_raw.csv data file. Saves changed file in "tests" directory, with added timestamp. Adds an area column to the data frame and fills it with two first numbers from postal code. Formats numbers to 1 place after comma. 
+
+## Scripts_different
 
   - [x] Backupper - a script to backup all repo data in a directory one level higher. To do this, just put a "backupper.py"  file in any directory (preferably "scripts_different") in repository and run it. It will make a "backup" directory one level higher, make inside a directory named "analiza + actual timestamp" and copy whole repo there.
 
