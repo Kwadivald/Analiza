@@ -21,7 +21,7 @@ This is a simple markdown-style documentation file. It gives a short overview of
 
   1. csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure).
 
-  2. smog_raw - jupyter script which manages first, basic data wrangling on smog_raw.csv data file. Saves changed file in "tests" directory, with added timestamp. Adds an area column to the data frame and fills it with two first numbers from postal code. Formats numbers to 1 place after comma. 
+  2. smog_raw - jupyter script which manages first, basic data wrangling on smog_raw.csv data file. Saves changed file in "tests" directory, with added timestamp. Adds an area column to the data frame and fills it with two first numbers from postal code. Formats numbers to 1 place after comma. Removes "-" from post code so it can be read as an integer. Checks, if every city is in the Poland area based on max latitude and longitude (N, S, E and W point), and returns, how many are outside these points.
 
 ## Scripts_different
 
