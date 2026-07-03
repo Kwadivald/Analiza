@@ -15,6 +15,8 @@ This is a simple markdown-style documentation file. It gives a short overview of
 
   * smog_raw.csv - a basic data file, which is made as a foundation for working and preprocessing data on. The smog_raw.ipynb script does the processing of it.
 
+  * smog_raw2.csv - second basic data file meant for basic merging and data preprocessing for jupyter script. 
+
   * smog1.csv, smog2.csv, smog3.csv - files made for seeing the shape in which the data is made and think about the way in which preprocess the data
 
 ## Scripts
