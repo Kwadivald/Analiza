@@ -17,11 +17,13 @@ This is a simple markdown-style documentation file. It gives a short overview of
 
   * smog_raw2.csv - second basic data file meant for basic merging and data preprocessing for jupyter script. 
 
+  * smog_polishraw.csv - data file with polish characters
+
   * smog1.csv, smog2.csv, smog3.csv - files made for seeing the shape in which the data is made and think about the way in which preprocess the data
 
 ## Scripts
 
-  1. csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure).
+  1. csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure). * [04.07.2026] - changed, so firstly is downloaded json file, and then it is changed to csv file type. It is also cleaned of wrong characters. 
 
   2. smog_raw - jupyter script which manages first, basic data wrangling on smog_raw.csv data file. Saves changed file in "tests" directory, with added timestamp. Adds an area column to the data frame and fills it with two first numbers from postal code. Formats numbers to 1 place after comma. Removes "-" from post code so it can be read as an integer. Checks, if every city is in the Poland area based on max latitude and longitude (N, S, E and W point), and returns, how many are outside these points.
 
