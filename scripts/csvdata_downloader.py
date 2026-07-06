@@ -30,8 +30,7 @@ def json_cleaner(json_filename, csv_filename):
         " \'city\':",
         " \'longitude\':",
         " \'latitude\':",
-        " \'humidity_avg\':",
-        " humidity_avg:",
+        " \"humidity_avg\":",
         " \'pressure_avg\':",
         " \'temperature_avg\':",
         " \'pm10_avg\':", 
@@ -51,11 +50,14 @@ def json_cleaner(json_filename, csv_filename):
         df_json['smog_data'] = df_json['smog_data'].str.replace("{\'school\': {", "")
         df_json['smog_data'] = df_json['smog_data'].str.replace("}, \'data\': {", ", ")
         df_json['smog_data'] = df_json['smog_data'].str.replace("}", "")
+        df_json['smog_data'] = df_json['smog_data'].str.replace("\\t", "")
+        df_json['smog_data'] = df_json['smog_data'].str.replace("\\r", "")
+        df_json['smog_data'] = df_json['smog_data'].str.replace("\\n", "")
+        df_json['smog_data'] = df_json['smog_data'].str.replace(" humidity_avg:", "")
+        df_json['smog_data'] = df_json['smog_data'].str.replace("None", "")
         df_json['smog_data'] = df_json['smog_data'].str.replace("\'", "")
-        df_json['smog_data'] = df_json['smog_data'].str.replace("\\t'", "")
-        df_json['smog_data'] = df_json['smog_data'].str.replace("\\r'", "")
-        df_json['smog_data'] = df_json['smog_data'].str.replace("\\n'", "")
         df_json['smog_data'] = df_json['smog_data'].str.replace(",,", "")
+        df_json['smog_data'] = df_json['smog_data'].str.replace("\\xa", "")
     print("Cleaning basic unnecessary characters")
 
 
@@ -78,21 +80,24 @@ def json_cleaner(json_filename, csv_filename):
 
     # Create column names at the top of csv file, add 2 temporary backup columns
 
-    header = "\"NAME\",\"STREET\",\"POST_CODE\",\"CITY\",\"LONGITUDE\",\"LATITUDE\",\"HUMIDITY_AVG\",\"PRESSURE_AVG\",\"TEMPERATURE_AVG\",\"PM10_AVG\",\"PM25_AVG\",\"TIMESTAMP\",\"ERROR1\",\"ERROR2\""
+    header = "\"NAME\",\"STREET\",\"POST_CODE\",\"CITY\",\"LONGITUDE\",\"LATITUDE\",\"HUMIDITY_AVG\",\"PRESSURE_AVG\",\"TEMPERATURE_AVG\",\"PM10_AVG\",\"PM25_AVG\",\"TIMESTAMP\",\"ERROR1\""
 
     with open(output, 'r', encoding='utf-8-sig') as f:
-        with open(input,'w', encoding='utf-8-sig') as ff:
+        with open(csv_filename,'w', encoding='utf-8-sig') as ff:
             ff.write(f.read().replace("smog_data", header))
     print("Adding column headers + 2 backup error columns")
 
-    # Read clean csv file and save it in data folder
-
-    print("Transferring cleaned data from temporary file to main data file")
-    df_json = pd.read_csv(input)
-    df_json.to_csv(csv_filename, index=False, encoding='utf-8-sig')
-
+    # Clean columns with coma in "NAME" column
+    
+    df_csv = pd.read_csv(csv_filename, encoding='utf-8-sig')
+    for x, y in df_csv['ERROR1'].items():
+        if df_csv['ERROR1'].notna():
+            print(x, y)
+    
+    
+    
     if os.path.exists(csv_filename):
-        print(f"Downloaded json and saved it to the csv file")
+        print(f"Transferred json to the csv file")
         print(f"File saved: {csv_filename}")
     else:
         print("Failed to transfer into csv file.")
@@ -101,7 +106,6 @@ def json_cleaner(json_filename, csv_filename):
 
 # Link to the data file
 
-# Polish JSON https://public-esa.ose.gov.pl/api/v1/smog
 json_link = "https://public-esa.ose.gov.pl/api/v1/smog"
 #csv_link = "https://public-esa.ose.gov.pl/api/v1/smog/csv"
 
