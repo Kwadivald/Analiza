@@ -24,7 +24,7 @@ This repository is intended to help you:
 - `scripts/` for source code
 - `scripts_different/` for scripts which are not crucial and are made for fun
 - `data/` for datasets or sample inputs
-- `tests/` for automated checks
+- `temp/` for temporary filesS
 - `licenses/` for license files
 
 ## Contributing

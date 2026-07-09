@@ -63,8 +63,8 @@ def json_cleaner(json_filename, csv_filename):
 
     # Save current changes to the temp file
 
-    output = "./tests/smog_jsonclean2.csv"
-    input = "./tests/smog_jsonclean.csv"
+    output = "./temp/smog_jsonclean2.csv"
+    input = "./temp/smog_jsonclean.csv"
 
     print("Saving temporary files")
     df_json.to_csv(input, index=False, encoding='utf-8-sig')
@@ -91,8 +91,9 @@ def json_cleaner(json_filename, csv_filename):
     
     df_csv = pd.read_csv(csv_filename, encoding='utf-8-sig')
     for x, y in df_csv['ERROR1'].items():
-        if df_csv['ERROR1'].notna():
-            print(x, y)
+        if type(y) != type(pd.NaT):
+            
+            print(x, type(y))
     
     
     
