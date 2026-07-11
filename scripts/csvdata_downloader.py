@@ -4,6 +4,17 @@ import os
 import pandas as pd
 import json
 
+# Actual timestamp
+
+print("Generating timestamp for the filename...")
+ts = dt.datetime.now().strftime("%Y%m%d_%H-%M")
+
+# Create a filename with the timestamp
+
+csv_filename = f"./data/smog_{ts}.csv"
+json_filename = f"./data/smog_{ts}.json"
+print(f"Created filename: {json_filename}")
+    
 # Function cleaning json file and validating it as csv
 
 def json_cleaner(json_filename, csv_filename):
@@ -44,6 +55,7 @@ def json_cleaner(json_filename, csv_filename):
         for y in headlist:
             df_json['smog_data'] = df_json['smog_data'].str.replace(y, "")
     print("Cleaning column names in the file")
+
     # Clear basic unnecessary chars
 
     for x in df_json['smog_data']:    
@@ -85,18 +97,37 @@ def json_cleaner(json_filename, csv_filename):
     with open(output, 'r', encoding='utf-8-sig') as f:
         with open(csv_filename,'w', encoding='utf-8-sig') as ff:
             ff.write(f.read().replace("smog_data", header))
-    print("Adding column headers + 2 backup error columns")
+    print("Adding column headers + backup error column")
 
     # Clean columns with coma in "NAME" column
     
     df_csv = pd.read_csv(csv_filename, encoding='utf-8-sig')
+    df_csv['ERROR1'] = pd.to_datetime(df_csv['ERROR1'], errors='coerce')
+    columns = df_csv.columns[1:]
+    for n in columns:
+        df_csv[f'{n}'] = df_csv[f'{n}'].astype(str)
+    '''for x, y in df_csv['ERROR1'].items():
+        if type(y) != type(pd.NaT):
+            n = 0
+            #df_csv.at[x, 'NAME'] += df_csv.at[x, 'STREET']
+            while n < len(columns) - 1 :
+                df_csv.at[x, f"'{columns[n]}'"] = df_csv.at[x, f"'{columns[n+1]}'"]
+                #print(columns[n], columns[n + 1])
+                n += 1
+            #print(df_csv.at[x, 'NAME'], df_csv.at[x, 'STREET'])'''
     for x, y in df_csv['ERROR1'].items():
         if type(y) != type(pd.NaT):
+            n = 1
+            while n + 1 < len(columns) - 1:
+                print(n)
+                df_csv.iloc[x, n - 1] = df_csv.iloc[x, n]
+                #df_csv.replace(df_csv.at[x, f"{columns[n]}"], df_csv.at[x, f"{columns[n + 1]}"])
+                #print(f"'{columns[n]}'", df_csv.iloc[x, n])
+                n += 1
+                #print(type(df_csv.at[x, 'NAME']))
+            df_csv.iloc[x, 0] += df_csv.iloc[x, 1]
+    df_csv.to_csv("E:/AWDP/Marcia/Analiza/temp/smog_csvclean.csv", index=False, encoding='utf-8-sig')
             
-            print(x, type(y))
-    
-    
-    
     if os.path.exists(csv_filename):
         print(f"Transferred json to the csv file")
         print(f"File saved: {csv_filename}")
@@ -105,37 +136,33 @@ def json_cleaner(json_filename, csv_filename):
         
     print("Cleaning successful")
 
-# Link to the data file
+# Define function for downloading json file:
 
-json_link = "https://public-esa.ose.gov.pl/api/v1/smog"
-#csv_link = "https://public-esa.ose.gov.pl/api/v1/smog/csv"
+def file_downloader():
+    # Link to the data file
 
-# Actual timestamp
+    json_link = "https://public-esa.ose.gov.pl/api/v1/smog"
+    #csv_link = "https://public-esa.ose.gov.pl/api/v1/smog/csv"
 
-print("Generating timestamp for the filename...")
-ts = dt.datetime.now().strftime("%Y%m%d_%H-%M")
+    #  Download the  file and save it with the timestamp in the filename
 
-# Create a filename with the timestamp
+    print(f"Downloading the json file from {json_link}...")
+    response = requests.get(json_link)
+    with open(json_filename, 'wb') as file:
+        file.write(response.content)
 
-csv_filename = f"./data/smog_{ts}.csv"
-json_filename = f"./data/smog_{ts}.json"
-print(f"Created filename: {json_filename}")
+    # Check if the file was downloaded successfully. 
 
-#  Download the  file and save it with the timestamp in the filename
+    if os.path.exists(json_filename):
+        print(f"Downloaded and saved the json file")
+        print(f"File saved: {json_filename}")
+    else:
+        print("Failed to download the json file.")
 
-print(f"Downloading the json file from {json_link}...")
-response = requests.get(json_link)
-with open(json_filename, 'wb') as file:
-    file.write(response.content)
+# Download json file
 
-# Check if the file was downloaded successfully. 
+file_downloader()
 
-if os.path.exists(json_filename):
-    print(f"Downloaded and saved the json file")
-    print(f"File saved: {json_filename}")
-else:
-    print("Failed to download the json file.")
-
-# If downloaded file exists, perform cleaning on it.
+# If downloaded file exists, perform cleaning on it and turn into csv file.
 
 json_cleaner(json_filename, csv_filename)
