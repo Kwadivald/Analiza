@@ -1,5 +1,5 @@
 # Analiza
-A brief description of what this project does and who it's for
+A brief description of what this project does:
 
 Analiza is a project starter repository for organizing and documenting work related to data analysis, research, or exploratory tasks.
 
@@ -26,9 +26,3 @@ This repository is intended to help you:
 - `data/` for datasets or sample inputs
 - `temp/` for temporary filesS
 - `licenses/` for license files
-
-## Contributing
-If you plan to collaborate on this project, document your workflow, naming conventions, and any setup steps needed for others.
-
-## License
-Add the appropriate license information for your project.

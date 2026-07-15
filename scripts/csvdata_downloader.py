@@ -77,6 +77,7 @@ def json_cleaner(json_filename, csv_filename):
 
     output = "./temp/smog_jsonclean2.csv"
     input = "./temp/smog_jsonclean.csv"
+    clean_csv = "./temp/smog_csvclean.csv"
 
     print("Saving temporary files")
     df_json.to_csv(input, index=False, encoding='utf-8-sig')
@@ -99,35 +100,40 @@ def json_cleaner(json_filename, csv_filename):
             ff.write(f.read().replace("smog_data", header))
     print("Adding column headers + backup error column")
 
+    # Set data frame with column headers
+    
+    df_json = pd.read_csv(csv_filename, encoding='utf-8-sig')
+    
     # Clean columns with coma in "NAME" column
     
-    df_csv = pd.read_csv(csv_filename, encoding='utf-8-sig')
-    df_csv['ERROR1'] = pd.to_datetime(df_csv['ERROR1'], errors='coerce')
-    columns = df_csv.columns[1:]
-    for n in columns:
-        df_csv[f'{n}'] = df_csv[f'{n}'].astype(str)
-    '''for x, y in df_csv['ERROR1'].items():
-        if type(y) != type(pd.NaT):
-            n = 0
-            #df_csv.at[x, 'NAME'] += df_csv.at[x, 'STREET']
-            while n < len(columns) - 1 :
-                df_csv.at[x, f"'{columns[n]}'"] = df_csv.at[x, f"'{columns[n+1]}'"]
-                #print(columns[n], columns[n + 1])
-                n += 1
-            #print(df_csv.at[x, 'NAME'], df_csv.at[x, 'STREET'])'''
-    for x, y in df_csv['ERROR1'].items():
-        if type(y) != type(pd.NaT):
-            n = 1
-            while n + 1 < len(columns) - 1:
-                print(n)
-                df_csv.iloc[x, n - 1] = df_csv.iloc[x, n]
-                #df_csv.replace(df_csv.at[x, f"{columns[n]}"], df_csv.at[x, f"{columns[n + 1]}"])
-                #print(f"'{columns[n]}'", df_csv.iloc[x, n])
-                n += 1
-                #print(type(df_csv.at[x, 'NAME']))
-            df_csv.iloc[x, 0] += df_csv.iloc[x, 1]
-    df_csv.to_csv("E:/AWDP/Marcia/Analiza/temp/smog_csvclean.csv", index=False, encoding='utf-8-sig')
-            
+    print("Removing coma characters from \"NAME\" column")
+    df_json['ERROR1'] = pd.to_datetime(df_json['ERROR1'], errors='coerce')
+    with open(csv_filename, 'r', encoding='utf-8-sig') as f:
+        with open(output,'w', encoding='utf-8-sig') as ff:
+            lines = f.readlines()
+            ff.write(lines[0])
+            for x, y in df_json['ERROR1'].items():
+                x += 1
+                if type(y) != type(pd.NaT):
+                    ff.write(lines[x].replace(",", '', 1))
+                else:
+                    ff.write(lines[x])
+    
+    # Set clean data frame
+    
+    df_json = pd.read_csv(output, encoding='utf-8-sig')
+
+    # Removing temporary error column
+    
+    df_json = df_json.drop(columns=['ERROR1'])
+    print("Removing error column")
+    
+    # Saving file to csv
+    
+    df_json.to_csv(csv_filename, index=False, encoding='utf-8-sig')
+    
+    # Check if file exists and provide a message
+    
     if os.path.exists(csv_filename):
         print(f"Transferred json to the csv file")
         print(f"File saved: {csv_filename}")
