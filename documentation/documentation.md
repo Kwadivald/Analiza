@@ -10,6 +10,8 @@ This is a simple markdown-style documentation file. It gives a short overview of
 ### Files and Purpose 
 
   - .gitignore - a file which states, which files and directories shouldn't be pushed (or sent away) to git servers.
+  - README - a file with basic description of the project.
+  - licenses - basic license files downloaded with database files and made when this project started.
 
 ## Data
 
@@ -23,13 +25,17 @@ This is a simple markdown-style documentation file. It gives a short overview of
 
 ## Scripts
 
-  1. csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure). * [04.07.2026] - changed, so firstly is downloaded json file, and then it is changed to csv file type. It is also cleaned of wrong characters. 
+  1. csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure). * [04.07.2026] - changed, so firstly is downloaded json file, and then it is changed to csv file type. It is also cleaned of wrong characters. First column value is cleaned from commas if any occur.
 
-  2. smog_raw - jupyter script which manages first, basic data wrangling on smog_raw.csv data file. Saves changed file in "tests" directory, with added timestamp. Adds an area column to the data frame and fills it with two first numbers from postal code. Formats numbers to 1 place after comma. Removes "-" from post code so it can be read as an integer. Checks, if every city is in the Poland area based on max latitude and longitude (N, S, E and W point), and returns, how many are outside these points.
+  2. smog_raw - jupyter script which manages first, basic data wrangling on smog_raw.csv data file. Saves changed file in "tests" directory, with added timestamp. Adds an area column to the data frame and fills it with province names based on postal code. Removes "-" from post code so it can be read as an integer. Checks, if every city is in the Poland area based on max latitude and longitude (N, S, E and W point), and returns, how many are outside these points.
 
 ## Scripts_different
 
   - [x] Backupper - a script to backup all repo data in a directory one level higher. To do this, just put a "backupper.py"  file in any directory (preferably "scripts_different") in repository and run it. It will make a "backup" directory one level higher, make inside a directory named "analiza + actual timestamp" and copy whole repo there.
+
+## Temp
+
+  - smog_jsonclean*.csv - a file made to backup cleaning json file process when transferring to csv.
 
 ## How the Files Work Together
 
