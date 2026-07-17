@@ -17,15 +17,15 @@ This is a simple markdown-style documentation file. It gives a short overview of
 
   * smog_raw.csv - a basic data file, which is made as a foundation for working and preprocessing data on. The smog_raw.ipynb script does the processing of it.
 
-  * smog_raw2.csv - second basic data file meant for basic merging and data preprocessing for jupyter script. 
+  * smog_merged.csv - a file which contains all merged files having filename like "smog_%(Y)%(m)%(d)_%(H)-%(M).csv" into one file.
 
-  * smog_polishraw.csv - data file with polish characters
+  * smog_polishraw.csv - data file with polish characters.
 
-  * smog1.csv, smog2.csv, smog3.csv - files made for seeing the shape in which the data is made and think about the way in which preprocess the data
+  * smog_%(Y)%(m)%(d)_%(H)-%(M).csv - a file downloaded at a time saved in the timestamp.
 
 ## Scripts
 
-  1. csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure). * [04.07.2026] - changed, so firstly is downloaded json file, and then it is changed to csv file type. It is also cleaned of wrong characters. First column value is cleaned from commas if any occur.
+  1. csvdata_downloader - a script for downloading current csv data file from data provider and saving it in "data" directory. For executing should be put in scripts directory and just run. When run, it creates an actual timestamp so a user knows from which hour the data is collected. Then a name "smog + timestamp" is created and file is saved (and there is an information about success or failure). * [04.07.2026] - changed, so firstly is downloaded json file, and then it is changed to csv file type. It is also cleaned of wrong characters. First column value is cleaned from commas if any occur. When downloading file with file merger on, the downloaded file is automatically merged into "./data/smog_merged.csv" with all csv files which have a filename like "smog_%(Y)%(m)%(d)_%(H)-%(M).csv" and are in data directory. Then, the new file is downloaded and merged every 2 hours (if the process was not killed).
 
   2. smog_raw - jupyter script which manages first, basic data wrangling on smog_raw.csv data file. Saves changed file in "tests" directory, with added timestamp. Adds an area column to the data frame and fills it with province names based on postal code. Removes "-" from post code so it can be read as an integer. Checks, if every city is in the Poland area based on max latitude and longitude (N, S, E and W point), and returns, how many are outside these points.
 
@@ -36,6 +36,7 @@ This is a simple markdown-style documentation file. It gives a short overview of
 ## Temp
 
   - smog_jsonclean*.csv - a file made to backup cleaning json file process when transferring to csv.
+  - merged_files_backup.csv - a file made, when creating new file merged from all other csv datafiles.
 
 ## How the Files Work Together
 
