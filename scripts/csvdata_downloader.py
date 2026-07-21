@@ -220,12 +220,11 @@ json_cleaner(json_filename, csv_filename)
 
 file_merger()
 
-def proper_file_download():
-    file_downloader()
-    json_cleaner()
-    file_merger()
+'''def proper_file_download():
+    exec(open("./scripts/csvdata_downloader.py").read())
 
-'''schedule.every(2).hours.do(proper_file_download)
+schedule.every(10).minutes.do(proper_file_download)
+print("The next datafile will be downloaded in 10 minutes.")
 while True:
     schedule.run_pending()
     time.sleep(1)'''

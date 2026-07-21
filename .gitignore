@@ -1,7 +1,6 @@
 # Basic directories to ignore
 .venv/
 .vscode/
-temp/
 
 # Basic files to ignore
 scripts_different/cw1.ipynb
@@ -9,4 +8,3 @@ scripts_different/AIEvenorODD.py
 scripts_different/names.csv
 scripts/jupyternb.ipynb
 scripts/python.py
-tests/*
