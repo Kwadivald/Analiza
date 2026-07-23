@@ -2,7 +2,10 @@ import datetime as dt
 import requests
 import os
 import pandas as pd
-import json
+import shutil
+import filefinder
+import schedule
+import time
 
 # Actual timestamp
 
@@ -13,24 +16,24 @@ ts = dt.datetime.now().strftime("%Y%m%d_%H-%M")
 
 csv_filename = f"./data/smog_{ts}.csv"
 json_filename = f"./data/smog_{ts}.json"
-print(f"Created filename: {json_filename}")
+print(f"Created filename: {json_filename}, {csv_filename}")
     
 # Function cleaning json file and validating it as csv
 
 def json_cleaner(json_filename, csv_filename):
-    print("Starting file cleaning")
+    print("Starting file cleaning.")
 
     # Transfer json to csv for easier cleaning
 
     df_json = pd.read_json(json_filename, encoding='utf-8-sig')
     df_json.to_csv(csv_filename, index=False, encoding='utf-8-sig')
     df_json = pd.read_csv(csv_filename, encoding='utf-8-sig')
-    print("Converting downloaded json to csv file")
+    print("Converting downloaded json to csv file.")
 
     # Drop unnecessary columns
 
     df_json = df_json.drop(columns=['it_has_next_page', 'pages_total'])
-    print("Removing unnecessary columns")
+    print("Removing unnecessary columns.")
 
     # List of columns in file
 
@@ -54,7 +57,7 @@ def json_cleaner(json_filename, csv_filename):
     for x in df_json['smog_data']:
         for y in headlist:
             df_json['smog_data'] = df_json['smog_data'].str.replace(y, "")
-    print("Cleaning column names in the file")
+    print("Cleaning column names in the file.")
 
     # Clear basic unnecessary chars
 
@@ -70,26 +73,24 @@ def json_cleaner(json_filename, csv_filename):
         df_json['smog_data'] = df_json['smog_data'].str.replace("\'", "")
         df_json['smog_data'] = df_json['smog_data'].str.replace(",,", "")
         df_json['smog_data'] = df_json['smog_data'].str.replace("\\xa", "")
-    print("Cleaning basic unnecessary characters")
+    print("Cleaning basic unnecessary characters.")
 
 
     # Save current changes to the temp file
 
     output = "./temp/smog_jsonclean2.csv"
     input = "./temp/smog_jsonclean.csv"
-    clean_csv = "./temp/smog_csvclean.csv"
 
-    print("Saving temporary files")
     df_json.to_csv(input, index=False, encoding='utf-8-sig')
     df_json.to_csv(output, index=False, encoding='utf-8-sig')
-    print("Saved temporary files")
+    print("Saved temporary files.")
 
     # Remove "\"" characters fom file
 
     with open(input, 'r', encoding='utf-8-sig') as f:
         with open(output,'w', encoding='utf-8-sig') as ff:
             ff.write(f.read().replace("\"", ""))
-    print("Removing \" characters from csv file")
+    print("Removing \" characters from csv file.")
 
     # Create column names at the top of csv file, add 2 temporary backup columns
 
@@ -98,7 +99,7 @@ def json_cleaner(json_filename, csv_filename):
     with open(output, 'r', encoding='utf-8-sig') as f:
         with open(csv_filename,'w', encoding='utf-8-sig') as ff:
             ff.write(f.read().replace("smog_data", header))
-    print("Adding column headers + backup error column")
+    print("Adding column headers + backup error column.")
 
     # Set data frame with column headers
     
@@ -106,7 +107,7 @@ def json_cleaner(json_filename, csv_filename):
     
     # Clean columns with coma in "NAME" column
     
-    print("Removing coma characters from \"NAME\" column")
+    print("Removing coma characters from \"NAME\" column.")
     df_json['ERROR1'] = pd.to_datetime(df_json['ERROR1'], errors='coerce')
     with open(csv_filename, 'r', encoding='utf-8-sig') as f:
         with open(output,'w', encoding='utf-8-sig') as ff:
@@ -126,7 +127,7 @@ def json_cleaner(json_filename, csv_filename):
     # Removing temporary error column
     
     df_json = df_json.drop(columns=['ERROR1'])
-    print("Removing error column")
+    print("Removing error column.")
     
     # Saving file to csv
     
@@ -135,12 +136,20 @@ def json_cleaner(json_filename, csv_filename):
     # Check if file exists and provide a message
     
     if os.path.exists(csv_filename):
-        print(f"Transferred json to the csv file")
+        print(f"Transferred json to the csv file.")
         print(f"File saved: {csv_filename}")
     else:
         print("Failed to transfer into csv file.")
         
-    print("Cleaning successful")
+    print("Cleaning successful.")
+            
+    # Remove json file transferred to csv
+    
+    if os.path.exists(json_filename): 
+        os.remove(json_filename)
+        print(f"File '{json_filename}' deleted successfully.")
+    else: 
+        print(f"File '{json_filename}' not found.")
 
 # Define function for downloading json file:
 
@@ -165,6 +174,40 @@ def file_downloader():
     else:
         print("Failed to download the json file.")
 
+
+# Download file every set amount of time set number times and  merge with earlier downloaded file
+
+def file_merger():
+    merged_datafiles = './data/smog_merged.csv'
+        
+    # Provide datafile list and create empty merger file
+    
+    finder = filefinder.Finder('./data/', 'smog_%(Y)%(m)%(d)_%(H)-%(M).csv')
+    datafile_list = finder.get_files()
+    print(f"Datafile list: {datafile_list}")
+    if not os.path.exists(merged_datafiles):
+        with open(merged_datafiles, "x") as file:
+            file.write("")
+            print("Empty file for data merging created.")
+    elif os.path.exists(merged_datafiles):
+        shutil.copy(merged_datafiles, './temp/merged_files_backup.csv')
+        os.remove(merged_datafiles)
+        with open(merged_datafiles, "x") as file:
+            file.write("")
+            print("Earlier merging file deleted and new empty file for data merging created.")
+
+    # Merge new files into base file
+
+    datafiles = pd.DataFrame()
+
+    for n in datafile_list:
+        df1 = pd.read_csv(n, encoding='utf-8-sig')
+        datafiles = pd.concat([datafiles, df1], ignore_index=True)
+    print("Merged all files from datafile list.")
+
+    datafiles.to_csv(merged_datafiles, index=False, encoding='utf-8-sig')
+    print("Saved merged files to csv file.")
+
 # Download json file
 
 file_downloader()
@@ -172,3 +215,16 @@ file_downloader()
 # If downloaded file exists, perform cleaning on it and turn into csv file.
 
 json_cleaner(json_filename, csv_filename)
+
+# Get all downloaded files from datafile list and merge them into one file.
+
+file_merger()
+
+'''def proper_file_download():
+    exec(open("./scripts/csvdata_downloader.py").read())
+
+schedule.every(10).minutes.do(proper_file_download)
+print("The next datafile will be downloaded in 10 minutes.")
+while True:
+    schedule.run_pending()
+    time.sleep(1)'''
