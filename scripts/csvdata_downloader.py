@@ -14,8 +14,8 @@ ts = dt.datetime.now().strftime("%Y%m%d_%H-%M")
 
 # Create a filename with the timestamp
 
-csv_filename = f"./data/smog_{ts}.csv"
-json_filename = f"./data/smog_{ts}.json"
+csv_filename = f"../data/smog_{ts}.csv"
+json_filename = f"../data/smog_{ts}.json"
 print(f"Created filename: {json_filename}, {csv_filename}")
     
 # Function cleaning json file and validating it as csv
@@ -78,8 +78,8 @@ def json_cleaner(json_filename, csv_filename):
 
     # Save current changes to the temp file
 
-    output = "./temp/smog_jsonclean2.csv"
-    input = "./temp/smog_jsonclean.csv"
+    output = "../temp/smog_jsonclean2.csv"
+    input = "../temp/smog_jsonclean.csv"
 
     df_json.to_csv(input, index=False, encoding='utf-8-sig')
     df_json.to_csv(output, index=False, encoding='utf-8-sig')
@@ -178,11 +178,11 @@ def file_downloader():
 # Download file every set amount of time set number times and  merge with earlier downloaded file
 
 def file_merger():
-    merged_datafiles = './data/smog_merged.csv'
+    merged_datafiles = '../data/smog_merged.csv'
         
     # Provide datafile list and create empty merger file
     
-    finder = filefinder.Finder('./data/', 'smog_%(Y)%(m)%(d)_%(H)-%(M).csv')
+    finder = filefinder.Finder('../data/', 'smog_%(Y)%(m)%(d)_%(H)-%(M).csv')
     datafile_list = finder.get_files()
     print(f"Datafile list: {datafile_list}")
     if not os.path.exists(merged_datafiles):
@@ -190,7 +190,7 @@ def file_merger():
             file.write("")
             print("Empty file for data merging created.")
     elif os.path.exists(merged_datafiles):
-        shutil.copy(merged_datafiles, './temp/merged_files_backup.csv')
+        shutil.copy(merged_datafiles, '../temp/merged_files_backup.csv')
         os.remove(merged_datafiles)
         with open(merged_datafiles, "x") as file:
             file.write("")
@@ -221,7 +221,7 @@ json_cleaner(json_filename, csv_filename)
 file_merger()
 
 '''def proper_file_download():
-    exec(open("./scripts/csvdata_downloader.py").read())
+    exec(open("../scripts/csvdata_downloader.py").read())
 
 schedule.every(10).minutes.do(proper_file_download)
 print("The next datafile will be downloaded in 10 minutes.")
