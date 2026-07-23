@@ -26,3 +26,8 @@ This repository is intended to help you:
 - `data/` for datasets or sample inputs
 - `temp/` for temporary filesS
 - `licenses/` for license files
+
+
+## Authors:
+- Marta Węglarz-Purcha
+- Wiktor Kopiński
